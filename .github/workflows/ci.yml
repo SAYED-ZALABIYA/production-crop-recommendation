@@ -1,6 +1,6 @@
 name: Python API Automation CI
 
-  push:
+push:
     branches: [ "main" ]
 
 jobs:
