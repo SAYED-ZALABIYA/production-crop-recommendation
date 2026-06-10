@@ -4,3 +4,5 @@ scikit-learn
 uvicorn
 pydantic
 joblib
+pytest 
+httpx
