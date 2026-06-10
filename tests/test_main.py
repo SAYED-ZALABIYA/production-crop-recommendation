@@ -1,5 +1,8 @@
 from fastapi.testclient import TestClient
-from src.main import app
+from unittest.mock import MagicMock
+from src.main import app, ml_models
+
+client = TestClient(app)
 
 def test_health_check():
     with TestClient(app) as client:
@@ -8,6 +11,14 @@ def test_health_check():
         assert response.json() == {"status": "healthy"}
 
 def test_successful_prediction():
+    mock_predictor = MagicMock()
+    mock_predictor.predict.return_value = {
+        "recommended_crop": "rice",
+        "confidence_score": 0.95
+    }
+    
+    ml_models["predictor"] = mock_predictor
+
     with TestClient(app) as client:
         payload = {
             "Nitrogen (kg/ha )": 90.0,
