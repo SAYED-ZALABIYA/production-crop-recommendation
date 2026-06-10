@@ -1,6 +1,19 @@
+import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import MagicMock
-from src.main import app, ml_models
+from unittest.mock import patch, MagicMock
+
+
+
+
+with patch('src.inference.CropPredictor') as mock_predictor_class:
+    mock_instance = MagicMock()
+    mock_instance.predict.return_value = {
+        "recommended_crop": "rice",
+        "confidence_score": 0.95
+    }
+    mock_predictor_class.return_value = mock_instance
+
+    from src.main import app
 
 client = TestClient(app)
 
@@ -11,14 +24,6 @@ def test_health_check():
         assert response.json() == {"status": "healthy"}
 
 def test_successful_prediction():
-    mock_predictor = MagicMock()
-    mock_predictor.predict.return_value = {
-        "recommended_crop": "rice",
-        "confidence_score": 0.95
-    }
-    
-    ml_models["predictor"] = mock_predictor
-
     with TestClient(app) as client:
         payload = {
             "Nitrogen (kg/ha )": 90.0,
