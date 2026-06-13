@@ -2,26 +2,20 @@ version: '3.8'
 
 services:
   crop-api:
-    # 1. إخبار الـ Compose بمكان الـ Dockerfile لبناء الـ Image تلقائياً
+  
     build:
-      context: .
+      context: .git
       dockerfile: Dockerfile
-    
-    # اسم الحاوية عند التشغيل
     container_name: crop-recommendation-container
-    
-    # 2. ربط البورتات (بورت الجهاز خارجي : بورت الحاوية داخلي)
     ports:
       - "8000:8000"
     
-    # 3. معيار النجاح الأول: إعادة التشغيل التلقائي إذا وقع السيرفر
     restart: always
 
-    # 4. معيار النجاح الثاني: الـ Healthcheck للتأكد من سلامة الـ API داخلياً
+    
     healthcheck:
-      # استخدام curl الداخلي لعمل تست على الـ endpoint الصيانة التي بنيناها
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-      interval: 30s      # يتم الفحص كل 30 ثانية
-      timeout: 10s       # لو السيرفر لم يرد خلال 10 ثواني يعتبر الطلب فاشل
-      retries: 3         # يعيد المحاولة 3 مرات قبل أن يغير الحالة لـ Unhealthy
-      start_period: 10s  # يعطي السيرفر 10 ثواني في البداية لكي يفتح ويحمل الموديل براحته قبل بدء الفحص
+      interval: 30s      
+      timeout: 10s       
+      retries: 3         
+      start_period: 10s  
